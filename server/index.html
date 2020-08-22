@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATPSAC-PESAJE</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body onload="mueveReloj()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <!-- <a class="navbar-brand" href="#">
+        <img src="weigth.png" width="30" height="30" alt="" />
+      </a> -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link">AMAZONAS TRADING PERU S.A.C.</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row justify-content-md-center mt-5">
+        <div class="col-md-2"></div>
+        <div class="col-md text-center">
+          <h1 id="titulo"></h1>
+          <form
+            name="form_pesaje"
+            id="formulario"
+            class="was-validated"
+            autocomplete="off"
+          >
+            <div class="form-row">
+              <div class="col-md-6 mt-2 mb-2 text-center">
+                <label>Fecha</label>
+                <input
+                  style="text-align: center;"
+                  type="text"
+                  class="form-control"
+                  name="fecha"
+                  id="fecha"
+                  disabled
+                  onfocus="window.document.form_pesaje.fecha.blur()"
+                />
+              </div>
+              <div class="col-md-3 mt-2 mb-2 text-center">
+                <label>Documento</label>
+                <select
+                  class="custom-select"
+                  id="selectDocumento"
+                  onchange="activarLinea();"
+                >
+                  <option selected value="GI">GI</option>
+                  <option value="IN">IN</option>
+                  <option value="GR">GR</option>
+                </select>
+              </div>
+              <div class="col-md-3 mt-2 mb-2 text-center">
+                <label>Referencia</label>
+                <input
+                  style="text-align: center;"
+                  type="text"
+                  class="form-control"
+                  name="referencia"
+                  id="referencia"
+                  minlength="3"
+                  maxlength="10"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Linea</label>
+                <select class="custom-select" id="selectLinea">
+                  <option selected value="Linea01">Linea01</option>
+                  <option value="Linea02">Linea02</option>
+                  <option value="Linea03">Linea03</option>
+                </select>
+              </div>
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Balanza</label>
+                <select class="custom-select" id="selectBalanza">
+                  <option selected value="2056-140349">2056-140349</option>
+                  <option value="2056-140350">2056-140350</option>
+                  <option value="2056-140351">2056-140351</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Producto</label>
+                <select class="custom-select" id="selectProducto">
+                  <option selected value="Cacao en grano Exportación"
+                    >Cacao en grano Exportación</option
+                  >
+                  <option value="Cacao en grano Exportación Fairtrade"
+                    >Cacao en grano Exportación Fairtrade</option
+                  >
+                  <option value="Cacao en grano Exportación Fairtrade Orgánico"
+                    >Cacao en grano Exportación Fairtrade Orgánico</option
+                  >
+                  <option value="Cacao en grano Exportación Tostado"
+                    >Cacao en grano Exportación Tostado</option
+                  >
+                </select>
+              </div>
+              <div class="col-md-3 mt-2 mb-2 text-center">
+                <label>Lote</label>
+                <input
+                  style="text-align: center;"
+                  type="text"
+                  class="form-control"
+                  name="lote"
+                  id="lote"
+                  required
+                  maxlength="10"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-6 mt-2 mb-2 text-center">
+                <label>Empaque</label>
+                <select
+                  class="custom-select"
+                  id="selectEmpaque"
+                  name="selectEmpaque"
+                  onchange="calcularTara();"
+                >
+                  <option selected value="0.10"
+                    >Saco PoliPropileno - 0.10Kg</option
+                  >
+                  <option value="0.15">Saco Yute - 0.15Kg</option>
+                </select>
+              </div>
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Cantidad</label>
+                <input
+                  style="text-align: center;"
+                  type="number"
+                  class="form-control"
+                  name="cantidad"
+                  id="cantidad"
+                  required
+                  min="1"
+                  max="100"
+                  value="1"
+                />
+              </div>
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Tara</label>
+                <input
+                  style="text-align: center;"
+                  type="number"
+                  class="form-control"
+                  name="tara"
+                  id="tara"
+                  required
+                  min="0.00"
+                  disabled
+                  onfocus="window.document.form_pesaje.tara.blur()"
+                />
+              </div>
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Tara Paleta</label>
+                <input
+                  style="text-align: center;"
+                  type="text"
+                  class="form-control"
+                  name="taraPaleta"
+                  id="taraPaleta"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Peso Bruto(Kg)</label>
+                <input
+                  style="font-size: 100px; color: red; text-align: center;"
+                  class="form-control"
+                  name="pesoBruto"
+                  id="pesoBruto"
+                  disabled
+                  onfocus="window.document.form_pesaje.pesoBruto.blur()"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md mt-2 mb-2 text-center">
+                <label>Peso Neto(Kg)</label>
+                <input
+                  style="font-size: 100px; color: green; text-align: center;"
+                  class="form-control"
+                  name="pesoNeto"
+                  id="pesoNeto"
+                  disabled
+                  onfocus="window.document.form_pesaje.pesoNeto.blur()"
+                />
+              </div>
+            </div>
+            <div class="form-row mt-3">
+              <div class="col-md mb-2 text-center">
+                <!-- <button class="btn btn-primary" type="submit">
+                  Enviar Pesada
+                </button> -->
+                <!-- <button type="submit" class="btn btn-primary" id="btnEnviar">
+                  Enviar Pesada
+                </button> -->
+              </div>
+            </div>
+          </form>
+          <div id="respuesta" class="mt-3" role="alert"></div>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Aceptar solo números y guión
+
+      $("#referencia").bind("keypress", function(event) {
+        var regex = new RegExp("^[0-9-]+$");
+        var key = String.fromCharCode(
+          !event.charCode ? event.which : event.charCode
+        );
+        if (!regex.test(key)) {
+          event.preventDefault();
+          return false;
+        }
+      });
+
+      $("input[name=lote]").bind("keypress", function(event) {
+        var regex = new RegExp("^[A-Z0-9-]+$");
+        var key = String.fromCharCode(
+          !event.charCode ? event.which : event.charCode
+        );
+        if (!regex.test(key)) {
+          event.preventDefault();
+          return false;
+        }
+      });
+
+      $("#taraPaleta").bind("keypress", function(event) {
+        var regex = new RegExp("^[0-9.]+$");
+        var key = String.fromCharCode(
+          !event.charCode ? event.which : event.charCode
+        );
+        if (!regex.test(key)) {
+          event.preventDefault();
+          return false;
+        }
+      });
+
+      // Convirtiendo a mayuscula
+
+      // function convertirMayuscula(e) {
+      //   e.value = e.value.toUpperCase();
+      // }
+
+      // Obteniendo elementos HTML
+
+      let formulario = document.getElementById("formulario");
+      let respuesta = document.getElementById("respuesta");
+      let titulo = document.getElementById("titulo");
+      let empaque = document.getElementById("selectEmpaque");
+      let cantidad = document.getElementById("cantidad");
+      let linea = document.getElementById("selectLinea");
+      let documento = document.getElementById("selectDocumento");
+      let pesoBruto = document.getElementById("pesoBruto");
+      let pesoNeto = document.getElementById("pesoNeto");
+      let tara = document.getElementById("tara");
+      let taraPaleta = document.getElementById("taraPaleta");
+      let referencia = document.getElementById("referencia");
+
+      // Recibiendo datos de balanza
+
+      const socket = io();
+
+      socket.on("data", data => {
+        // console.log(data.value);
+        pesoBruto.value = parseFloat(data.value).toFixed(2);
+        if (pesoBruto.value - parseFloat(tara.value) < 0) {
+          pesoNeto.value = parseFloat("0.00").toFixed(2);
+        } else {
+          pesoNeto.value = parseFloat(
+            pesoBruto.value - tara.value - taraPaleta.value
+          ).toFixed(2);
+        }
+      });
+
+      // Estableciendo titulo y parámetros de sede
+
+      const sede = "Sede Lima";
+      titulo.innerText = `Pesaje - ${sede}`;
+
+      // Estableciendo tara
+      tara.value = parseFloat(empaque.value * cantidad.value).toFixed(2);
+      taraPaleta.value = parseFloat("0.00").toFixed(2);
+
+      // Disparando el evento keydown
+
+      addEvent(document, "keydown", function(e) {
+        if (window.event) {
+          keyval = e.keyCode;
+        } else {
+          if (e.which) {
+            keyval = e.which;
+          }
+        }
+        if (keyval == 13) {
+          console.log("Se presiono enter");
+          if (
+            (documento.value === "GI" || documento.value === "IN") &&
+            referencia.value === ""
+          ) {
+            console.log("Validando referencia");
+            e.preventDefault();
+            Swal.fire({
+              icon: "warning",
+              title: "Revisar",
+              text: "Referencia vacía",
+              timer: 2000
+            });
+          } else if (
+            (documento.value === "GI" || documento.value === "IN") &&
+            referencia.value !== ""
+          ) {
+            // Preparando data => GI - IN
+
+            let fecha = document.forms["formulario"].elements["fecha"].value;
+            let documento =
+              document.forms["formulario"].elements["selectDocumento"].value;
+            let referencia =
+              document.forms["formulario"].elements["referencia"].value;
+            let linea =
+              document.forms["formulario"].elements["selectLinea"].value;
+            let balanza =
+              document.forms["formulario"].elements["selectBalanza"].value;
+            let producto =
+              document.forms["formulario"].elements["selectProducto"].value;
+            let empaque = document.getElementById("selectEmpaque");
+            let textEmpaque = empaque.options[empaque.selectedIndex].text;
+            let cantidad =
+              document.forms["formulario"].elements["cantidad"].value;
+            let tara = document.forms["formulario"].elements["tara"].value;
+            let pesoBruto =
+              document.forms["formulario"].elements["pesoBruto"].value;
+            let pesoNeto =
+              document.forms["formulario"].elements["pesoNeto"].value;
+
+            console.log("Enviando data");
+
+            let data = {
+              fecha: fecha,
+              documento: documento,
+              referencia: referencia,
+              linea: linea,
+              balanza: balanza,
+              producto: producto,
+              empaque: textEmpaque,
+              cantidad: cantidad,
+              tara: tara,
+              pesoBruto: pesoBruto,
+              pesoNeto: pesoNeto
+            };
+            formulario.onsubmit = enviarForm(event, data);
+          } else if (
+            documento.value === "GR" &&
+            (referencia.value === "" || lote.value === "")
+          ) {
+            console.log("Validando referencia y lote");
+            e.preventDefault();
+            Swal.fire({
+              icon: "warning",
+              title: "Revisar",
+              text: "Referencia o lote vacíos",
+              timer: 2000
+            });
+          } else if (
+            documento.value === "GR" &&
+            referencia.value !== "" &&
+            lote.value !== ""
+          ) {
+            if (parseFloat(taraPaleta.value) === 0) {
+              console.log("Validando tara");
+              e.preventDefault();
+              Swal.fire({
+                icon: "warning",
+                title: "Revisar",
+                text: "Registre Tara de Paleta",
+                timer: 2000
+              });
+            } else {
+              // Preparando data => GR
+
+              let fecha = document.forms["formulario"].elements["fecha"].value;
+              let documento =
+                document.forms["formulario"].elements["selectDocumento"].value;
+              let referencia =
+                document.forms["formulario"].elements["referencia"].value;
+              let balanza =
+                document.forms["formulario"].elements["selectBalanza"].value;
+              let producto =
+                document.forms["formulario"].elements["selectProducto"].value;
+              let lote = document.forms["formulario"].elements["lote"].value;
+              let empaque = document.getElementById("selectEmpaque");
+              let textEmpaque = empaque.options[empaque.selectedIndex].text;
+              let cantidad =
+                document.forms["formulario"].elements["cantidad"].value;
+              let tara = document.forms["formulario"].elements["tara"].value;
+              let taraPaleta =
+                document.forms["formulario"].elements["taraPaleta"].value;
+              let pesoBruto =
+                document.forms["formulario"].elements["pesoBruto"].value;
+              let pesoNeto =
+                document.forms["formulario"].elements["pesoNeto"].value;
+
+              console.log("Enviando data");
+
+              let data = {
+                fecha: fecha,
+                documento: documento,
+                referencia: referencia,
+                balanza: balanza,
+                producto: producto,
+                lote: lote,
+                empaque: textEmpaque,
+                cantidad: cantidad,
+                tara: tara,
+                taraPaleta: taraPaleta,
+                pesoBruto: pesoBruto,
+                pesoNeto: pesoNeto
+              };
+
+              formulario.onsubmit = enviarForm(event, data);
+            }
+          }
+        }
+      });
+
+      // Activar linea
+
+      function activarLinea() {
+        switch (documento.value) {
+          case "GI": {
+            linea.disabled = false;
+            cantidad.disabled = false;
+            taraPaleta.value = parseFloat("0.00").toFixed(2);
+            taraPaleta.disabled = true;
+            lote.disabled = true;
+            break;
+          }
+          case "IN": {
+            linea.disabled = false;
+            cantidad.disabled = false;
+            taraPaleta.value = parseFloat("0.00").toFixed(2);
+            taraPaleta.disabled = true;
+            lote.disabled = true;
+            break;
+          }
+          case "GR": {
+            cantidad.value = parseInt("1");
+            linea.disabled = true;
+            tara.disabled = true;
+            taraPaleta.disabled = false;
+            lote.disabled = false;
+            break;
+          }
+          default: {
+            linea.disabled = true;
+            break;
+          }
+        }
+      }
+
+      // Calculando tara
+
+      cantidad.addEventListener("change", calcularTara);
+
+      function calcularTara() {
+        tara.value = parseFloat(empaque.value * cantidad.value).toFixed(2);
+      }
+
+      // Calcular Neto
+
+      function calcularNeto() {
+        pesoNeto.value = pesoBruto.value - tara.value;
+      }
+
+      // Función que agrega el evento keydown
+
+      function addEvent(element, eventName, callback) {
+        if (element.addEventListener) {
+          element.addEventListener(eventName, callback, false);
+        } else if (element.attachEvent) {
+          element.attachEvent("on" + eventName, callback);
+        } else {
+          element["on" + eventName] = callback;
+        }
+      }
+
+      // Enviar valores del form a RESTAPI
+
+      function enviarForm(e, data) {
+        console.log("Se disparo el submit");
+        e.preventDefault();
+
+        // Preparando la petición POST
+
+        fetch("http://localhost:3000/pesadas", {
+          method: "post",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => response.json())
+          .then(response => {
+            if (response.ok === false) {
+              // respuesta.innerHTML = `
+              //     <div id="respuesta" class="alert alert-danger mt-3" role="alert">
+              //     Registro no se almaceno correctamente
+              //     </div>
+              //   `;
+              let error = JSON.stringify(response.err);
+              console.log(error);
+              Swal.fire({
+                icon: "error",
+                title: "Mensaje",
+                text: "No se almacenó la pesada",
+                timer: 2000
+              });
+            } else if (response.ok === true) {
+              // respuesta.innerHTML = `
+              //     <div id="respuesta" class="alert alert-success mt-3" role="alert">
+              //     Registro almacenado correctamente
+              //     </div>
+              //   `;
+              Swal.fire({
+                icon: "success",
+                title: "Mensaje",
+                text: "Pesada almacenada correctamente",
+                timer: 2000
+              });
+            }
+          })
+          .catch(
+            // (respuesta.innerHTML = `
+            //       <div id="respuesta" class="alert alert-info mt-3" role="alert">
+            //       No se pudo conectar al servidor
+            //       </div>
+            //     `)
+
+            function(error) {
+              console.log(
+                "Hubo un problema con la petición Fetch:" + error.message
+              );
+              Swal.fire({
+                icon: "warning",
+                title: "Mensaje",
+                text: "Hubo un error inesperado",
+                timer: 2000
+              });
+            }
+          );
+      }
+
+      // Función para mostrar reloj
+
+      function mueveReloj() {
+        momentoActual = new Date();
+        dia = momentoActual.getDate();
+        mes = momentoActual.getMonth() + 1;
+        year = momentoActual.getFullYear();
+        hora = momentoActual.getHours();
+        minuto = momentoActual.getMinutes();
+        segundo = momentoActual.getSeconds();
+
+        str_dia = new String(dia);
+        if (str_dia.length == 1) dia = "0" + dia;
+
+        str_mes = new String(mes);
+        if (str_mes.length == 1) mes = "0" + mes;
+
+        str_segundo = new String(segundo);
+        if (str_segundo.length == 1) segundo = "0" + segundo;
+
+        str_minuto = new String(minuto);
+        if (str_minuto.length == 1) minuto = "0" + minuto;
+
+        str_hora = new String(hora);
+        if (str_hora.length == 1) hora = "0" + hora;
+
+        fechaImprimible = dia + "/" + mes + "/" + year;
+        horaImprimible = hora + ":" + minuto + ":" + segundo;
+
+        document.getElementById("fecha").value =
+          fechaImprimible + " " + horaImprimible;
+        setTimeout("mueveReloj()", 1000);
+      }
+    </script>
+    <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
